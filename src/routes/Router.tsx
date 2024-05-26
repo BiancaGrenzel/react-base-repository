@@ -1,21 +1,57 @@
-import * as React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "../pages/home";
-import Login from "../pages/login";
-import Register from "../pages/register";
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import NotFound from "../pages/NotFound";
+import Register from "../pages/Register";
+import AuthenticatedLayout from "../templates/AuthenticatedLayout";
+import NotAuthenticatedLayout from "../templates/NotAuthenticatedLayout";
+import { PrivateRoute } from "./PrivateRoute";
+import { PublicRoute } from "./PublicRoute";
+import Profile from "../pages/Profile";
+import RecoverPassword from "../pages/RecoverPassword";
+import Tasks from "../pages/Tasks";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <PrivateRoute />,
+    children: [
+      {
+        path: "/",
+        element: <AuthenticatedLayout />,
+        children: [
+          { path: "/", element: <Home /> },
+          { path: "/profile", element: <Profile /> },
+          { path: "/tasks", element: <Tasks /> },
+        ],
+      },
+    ],
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <PublicRoute />,
+    children: [
+      {
+        path: "",
+        element: <NotAuthenticatedLayout />,
+        children: [{ path: "", element: <Login /> }],
+      },
+    ],
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <NotAuthenticatedLayout />,
+    children: [{ path: "/register", element: <Register /> }],
+  },
+  {
+    path: "/recover-password",
+    element: <NotAuthenticatedLayout />,
+    children: [{ path: "/recover-password", element: <RecoverPassword /> }],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+    children: [{ path: "not-found", element: <NotFound /> }],
   },
 ]);
 
