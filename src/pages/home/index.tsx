@@ -23,9 +23,8 @@ const Home = () => {
       </Box>
       <Grid container spacing={2}>
         {actions.map((action, index) => (
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} key={index}>
             <ActionCard
-              key={index}
               title={action.title}
               description={action.description}
               icon={action.icon}

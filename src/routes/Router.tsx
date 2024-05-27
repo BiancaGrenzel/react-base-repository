@@ -10,6 +10,7 @@ import { PublicRoute } from "./PublicRoute";
 import Profile from "../pages/Profile";
 import RecoverPassword from "../pages/RecoverPassword";
 import Tasks from "../pages/Tasks";
+import { TimeKeeping } from "../pages/TimeKeeping";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
           { path: "/", element: <Home /> },
           { path: "/profile", element: <Profile /> },
           { path: "/tasks", element: <Tasks /> },
+          { path: "/time-keeping", element: <TimeKeeping /> },
         ],
       },
     ],

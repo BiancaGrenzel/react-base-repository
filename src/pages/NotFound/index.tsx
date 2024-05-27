@@ -1,7 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import useStyles from "./styles";
 
 const NotFound = () => {
+  const styles = useStyles();
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -15,6 +17,7 @@ const NotFound = () => {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
+      sx={styles.container}
     >
       <Typography variant="h1" component="h2" gutterBottom>
         404

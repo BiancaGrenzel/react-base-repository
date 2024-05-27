@@ -1,3 +1,5 @@
+import { Theme } from "@mui/material";
+
 const useStyles = () => ({
   container: {
     display: "flex",
@@ -5,7 +7,7 @@ const useStyles = () => ({
     alignItems: "center",
     justifyContent: "center",
     height: "auto",
-    background: "white",
+    background: (theme: Theme) => theme.palette.background.paper,
     padding: "32px",
     borderRadius: "8px",
   },

@@ -234,8 +234,72 @@ export const messages: Messages = {
     en: "Description",
     pt: "Descrição",
   },
-  newTask:{
+  newTask: {
     en: "New Task",
     pt: "Nova Tarefa",
-  }
+  },
+  taskNumber: {
+    en: "Task Number",
+    pt: "Número da Tarefa",
+  },
+  hoursQuantity: {
+    en: "Hours Quantity",
+    pt: "Quantidade de Horas",
+  },
+  createdDate: {
+    en: "Created Date",
+    pt: "Data de Criação",
+  },
+  createAppointment: {
+    en: "Create Appointment",
+    pt: "Criar Apontamento",
+  },
+  addAppointent: {
+    en: "Add Appointment",
+    pt: "Adicionar Apontamento",
+  },
+  search: {
+    en: "Search",
+    pt: "Pesquisar",
+  },
+  date: {
+    en: "Date",
+    pt: "Data",
+  },
+  clear: {
+    en: "Clear",
+    pt: "Limpar",
+  },
+  appointments: {
+    en: "Appointments",
+    pt: "Apontamentos",
+  },
+  today: {
+    en: "Today",
+    pt: "Hoje",
+  },
+  lastWeek: {
+    en: "Last Week",
+    pt: "Última Semana",
+  },
+  lastMonth: {
+    en: "Last Month",
+    pt: "Útimo Mês",
+  },
+  lastSemester: {
+    en: "Last Semester",
+    pt: "Último Semestre",
+  },
+  all: {
+    en: "All",
+    pt: "Todos",
+  },
+  createAppointmentSuccess: {
+    en: "Appointment created successfully!",
+    pt: "Apontamento criado com sucesso!",
+  },
+  createAppointmentError: {
+    en: "Error creating appointment!",
+    pt: "Erro ao criar apontamento!",
+  },
 };

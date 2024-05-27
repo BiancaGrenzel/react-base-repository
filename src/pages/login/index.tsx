@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 
 import { toast } from "react-toastify";
@@ -85,7 +92,9 @@ const Login = () => {
               />
 
               <Typography variant="body2" align="left">
-                <a href="/recover-password">{intl("forgotYourPassword")}</a>
+                <Link href="/recover-password">
+                  {intl("forgotYourPassword")}
+                </Link>
               </Typography>
               <Button
                 type="submit"
@@ -97,7 +106,7 @@ const Login = () => {
               </Button>
               <Typography variant="body2" align="center">
                 {intl("dontHaveAnAccount")}{" "}
-                <a href="/register">{intl("signUp")}</a>
+                <Link href="/register">{intl("signUp")}</Link>
               </Typography>
             </Form>
           )}
