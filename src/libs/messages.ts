@@ -302,4 +302,16 @@ export const messages: Messages = {
     en: "Error creating appointment!",
     pt: "Erro ao criar apontamento!",
   },
+  task: {
+    en: "Task",
+    pt: "Tarefa",
+  },
+  kanbanBoard: {
+    en: "Kanban Board",
+    pt: "Quadro Kanban",
+  },
+  kanbanBoardDescription: {
+    en: "Organize your tasks in a kanban board",
+    pt: "Organize suas tarefas em um quadro kanban",
+  },
 };
