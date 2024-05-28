@@ -11,6 +11,7 @@ import Profile from "../pages/Profile";
 import RecoverPassword from "../pages/RecoverPassword";
 import Tasks from "../pages/Tasks";
 import { TimeKeeping } from "../pages/TimeKeeping";
+import KanbanBoard from "../pages/KanbanBoard";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
           { path: "/profile", element: <Profile /> },
           { path: "/tasks", element: <Tasks /> },
           { path: "/time-keeping", element: <TimeKeeping /> },
+          { path: "/kanban-board", element: <KanbanBoard /> },
         ],
       },
     ],

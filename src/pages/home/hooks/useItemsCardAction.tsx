@@ -1,6 +1,7 @@
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AlarmOnIcon from "@mui/icons-material/AlarmOn";
 import AssistantIcon from "@mui/icons-material/Assistant";
+import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "zustand";
@@ -41,6 +42,14 @@ export const useItemsCardAction = () => {
       icon: <WorkHistoryIcon />,
       onClick: () => {
         navigate("/time-keeping");
+      },
+    },
+    {
+      title: intl("kanbanBoard"),
+      description: intl("kanbanBoardDescription"),
+      icon: <DeveloperBoardIcon />,
+      onClick: () => {
+        navigate("/kanban-board");
       },
     },
   ];
