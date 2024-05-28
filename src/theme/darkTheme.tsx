@@ -1,4 +1,20 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, lighten, ThemeOptions } from "@mui/material/styles";
+
+declare module "@mui/material/styles" {
+  interface Components {
+    MuiDataGrid?: {
+      styleOverrides?: {
+        root?: {
+          "& .MuiDataGrid-cell"?: React.CSSProperties;
+          "& .MuiDataGrid-columnHeader"?: React.CSSProperties;
+          "& .MuiDataGrid-row"?: {
+            "&:nth-of-type(odd)"?: React.CSSProperties;
+          };
+        };
+      };
+    };
+  }
+}
 
 export const darkTheme = createTheme({
   palette: {
@@ -44,6 +60,13 @@ export const darkTheme = createTheme({
     },
   },
   components: {
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: "#303030",
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
@@ -53,6 +76,30 @@ export const darkTheme = createTheme({
             WebkitBackgroundClip: "text",
           },
         },
+        notchedOutline: {
+          borderColor: "#d3d3d3",
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#d3d3d3",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        outlinedPrimary: () => ({
+          borderColor: lighten(darkTheme.palette.primary.main, 0.5),
+          color: lighten(darkTheme.palette.primary.main, 0.5),
+        }),
+        containedPrimary: {
+          boxShadow: "none",
+        },
+        sizeMedium: () => ({
+          height: "40px",
+        }),
       },
     },
     MuiCard: {
@@ -77,5 +124,30 @@ export const darkTheme = createTheme({
         },
       },
     },
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#424242",
+          borderColor: "#303030",
+        },
+        header: {
+          backgroundColor: "#424242",
+          borderColor: "#303030",
+        },
+        cell: {
+          borderColor: "#303030",
+          color: "#fff",
+        },
+        withBorderColor: {
+          borderColor: "#303030",
+        },
+        columnHeaderRow: {
+          backgroundColor: "#383838",
+        },
+        footerContainer: {
+          backgroundColor: "#383838",
+        },
+      },
+    },
   },
-});
+} as ThemeOptions);

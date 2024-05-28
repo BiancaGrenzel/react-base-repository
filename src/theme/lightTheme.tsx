@@ -1,4 +1,20 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
+
+declare module "@mui/material/styles" {
+  interface Components {
+    MuiDataGrid?: {
+      styleOverrides?: {
+        root?: {
+          "& .MuiDataGrid-cell"?: React.CSSProperties;
+          "& .MuiDataGrid-columnHeader"?: React.CSSProperties;
+          "& .MuiDataGrid-row"?: {
+            "&:nth-of-type(odd)"?: React.CSSProperties;
+          };
+        };
+      };
+    };
+  }
+}
 
 export const lightTheme = createTheme({
   palette: {
@@ -42,5 +58,16 @@ export const lightTheme = createTheme({
         },
       },
     },
+
+    MuiDataGrid: {
+      styleOverrides: {
+        columnHeaderRow: {
+          backgroundColor: "#f9fafb",
+        },
+        footerContainer: {
+          backgroundColor: "#f9fafb",
+        },
+      },
+    },
   },
-});
+} as ThemeOptions);
