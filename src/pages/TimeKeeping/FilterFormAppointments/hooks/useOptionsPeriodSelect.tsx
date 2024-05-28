@@ -1,5 +1,5 @@
 import { useStore } from "zustand";
-import { useTranslationStore } from "../../../store";
+import { useTranslationStore } from "../../../../store/translationStore";
 
 export const useOptionsPeriodSelect = () => {
   const { intl } = useStore(useTranslationStore);

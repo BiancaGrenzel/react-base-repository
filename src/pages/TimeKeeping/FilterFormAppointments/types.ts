@@ -1,5 +1,5 @@
 export type FilterAppointmentsFormValues = {
-  nmTask?: number;
+  nmTask?: string;
   description?: string;
   period?: string;
   qtHours?: number;

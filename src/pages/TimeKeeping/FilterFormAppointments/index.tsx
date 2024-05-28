@@ -82,6 +82,7 @@ export const FilterFormAppointments = ({
       initialValues={{
         description: "",
         period: "all",
+        nmTask: "",
       }}
       onSubmit={onSubmit}
     >
@@ -99,26 +100,10 @@ export const FilterFormAppointments = ({
                 value={values.nmTask}
                 onChange={handleChange}
                 error={touched.nmTask && Boolean(errors.nmTask)}
-                type="number"
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Field
-                id="period"
-                as={Select}
-                size="small"
-                label={intl("date")}
-                name="period"
-                fullWidth
-                value={values.period || "all"}
-                onChange={handleChange}
-                error={touched.period && Boolean(errors.period)}
-                type="date"
-                children={optionsPeriodSelect.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                type="string"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -132,6 +117,27 @@ export const FilterFormAppointments = ({
                 value={values.description}
                 onChange={handleChange}
                 error={touched.description && Boolean(errors.description)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Field
+                id="period"
+                as={Select}
+                size="small"
+                name="period"
+                fullWidth
+                value={values.period || "all"}
+                onChange={handleChange}
+                error={touched.period && Boolean(errors.period)}
+                type="date"
+                children={optionsPeriodSelect.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               />
             </Grid>
             <Grid item xs={12} md={1.5}>
