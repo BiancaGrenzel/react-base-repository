@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import Column from "./Column";
-import { Task, mockData } from "./utils";
+import { Task } from "./utils";
 import { Box, Card, Grid, Typography } from "@mui/material";
 import useStyles from "./styles";
 import { useKanban } from "../../hooks/useKanban";
+import { TKanban } from "../../types/kanban.types";
+import { toast } from "react-toastify";
+import { useStore } from "zustand";
+import { useTranslationStore } from "../../store";
 
 export default function KanbanBoard() {
   const styles = useStyles();
@@ -13,18 +17,14 @@ export default function KanbanBoard() {
   const [backlog, setBacklog] = useState<Task[]>([]);
   const [inReview, setInReview] = useState<Task[]>([]);
   const [inProgress, setInProgress] = useState<Task[]>([]);
-  const { getKanbanByDate } = useKanban();
+  const { getKanbanByDate, updateTaskStatusKanban } = useKanban();
+  const [kanban, setKanban] = useState<TKanban | null>(null);
+  const { intl } = useStore(useTranslationStore);
 
-  useEffect(() => {
-    async function fetchData() {
-      const kanbans = await getKanbanByDate();
-      console.log("result", kanbans);
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    mockData.forEach((task) => {
+  async function getKanban() {
+    const data = await getKanbanByDate();
+    setKanban(data);
+    data.tasks.forEach((task) => {
       switch (task.status) {
         case "todo":
           setIncomplete((prev) => [...prev, task]);
@@ -38,11 +38,23 @@ export default function KanbanBoard() {
         case "inReview":
           setInReview((prev) => [...prev, task]);
           break;
-        case "backlog":
+        default:
           setBacklog((prev) => [...prev, task]);
-          break;
       }
     });
+  }
+
+  async function updateTask(taskId: string, status: string) {
+    if (kanban === null) return;
+    const updateTaskPromise = () =>
+      updateTaskStatusKanban(kanban.id, taskId, status);
+    toast.promise(updateTaskPromise, {
+      error: intl("errorEditStatusKanbanTask"),
+    });
+  }
+
+  useEffect(() => {
+    getKanban();
   }, []);
 
   const handleDragEnd = (result: DropResult) => {
@@ -50,7 +62,7 @@ export default function KanbanBoard() {
 
     if (!destination || source.droppableId === destination.droppableId) return;
 
-    deletePreviousState(source.droppableId, draggableId);
+    if (kanban === null) return;
 
     const task = findItemById(draggableId, [
       ...incomplete,
@@ -62,6 +74,7 @@ export default function KanbanBoard() {
 
     if (!task) return;
     setNewState(destination.droppableId, task);
+    deletePreviousState(source.droppableId, draggableId);
   };
 
   function deletePreviousState(sourceDroppableId: string, taskId: string) {
@@ -90,22 +103,27 @@ export default function KanbanBoard() {
       case "1":
         updatedTask = { ...task, status: "todo" };
         setIncomplete([updatedTask, ...incomplete]);
+        updateTask(task.id, "todo");
         break;
       case "2":
         updatedTask = { ...task, status: "inProgress" };
         setInProgress([updatedTask, ...inProgress]);
+        updateTask(task.id, "inProgress");
         break;
       case "3":
         updatedTask = { ...task, status: "inReview" };
         setInReview([updatedTask, ...inReview]);
+        updateTask(task.id, "inReview");
         break;
       case "4":
         updatedTask = { ...task, status: "backlog" };
         setBacklog([updatedTask, ...backlog]);
+        updateTask(task.id, "backlog");
         break;
       case "5":
         updatedTask = { ...task, status: "done" };
         setCompleted([updatedTask, ...completed]);
+        updateTask(task.id, "done");
         break;
     }
   }

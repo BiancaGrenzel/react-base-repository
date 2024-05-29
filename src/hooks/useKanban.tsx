@@ -1,4 +1,4 @@
-import { get_kanban_by_date } from "../services/kanban";
+import { get_kanban_by_date, update_task_status } from "../services/kanban";
 import { TKanban } from "../types/kanban.types";
 
 export const useKanban = () => {
@@ -12,5 +12,20 @@ export const useKanban = () => {
     }
   };
 
-  return { getKanbanByDate };
+  const updateTaskStatusKanban = async (
+    kanbanId: string,
+    taskId: string,
+    status: string
+  ): Promise<void> => {
+    try {
+      console.log(kanbanId, taskId, status)
+      if (!kanbanId || !taskId || !status) throw new Error("Dados inválidos");
+      await update_task_status(kanbanId, taskId, status);
+    } catch (error) {
+      console.error(error);
+      throw new Error("Erro ao atualizar o status da tarefa");
+    }
+  };
+
+  return { getKanbanByDate, updateTaskStatusKanban };
 };

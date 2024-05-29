@@ -314,4 +314,8 @@ export const messages: Messages = {
     en: "Organize your tasks in a kanban board",
     pt: "Organize suas tarefas em um quadro kanban",
   },
+  errorEditStatusKanbanTask: {
+    en: "Error editing status of kanban task",
+    pt: "Erro ao editar status da tarefa do kanban",
+  },
 };

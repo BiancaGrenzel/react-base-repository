@@ -1,9 +1,11 @@
 import {
   Timestamp,
   collection,
+  doc,
   getDocs,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
@@ -51,4 +53,15 @@ export const get_kanban_by_date = async (date?: Timestamp) => {
   } else {
     throw new Error("No kanban found for the current date");
   }
+};
+
+export const update_task_status = async (
+  kanbanId: string,
+  taskId: string,
+  status: string
+) => {
+  const kanbanRef = doc(refKanbanCollection, kanbanId);
+  const taskRef = doc(collection(kanbanRef, "tasks"), taskId);
+
+  await updateDoc(taskRef, { status: status });
 };
