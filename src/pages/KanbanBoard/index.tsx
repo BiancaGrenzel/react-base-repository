@@ -2,52 +2,53 @@ import { useState, useEffect } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import Column from "./Column";
 import { Task } from "./utils";
-import { Box, Card, Grid, Typography } from "@mui/material";
+import { Box, Card, Grid, MenuItem, Select, Typography } from "@mui/material";
 import useStyles from "./styles";
 import { useKanban } from "../../hooks/useKanban";
-import { TKanban } from "../../types/kanban.types";
 import { toast } from "react-toastify";
 import { useStore } from "zustand";
 import { useTranslationStore } from "../../store";
+import { Loading } from "../../components/Loading";
+import { formatTimestampDate } from "../../utils/formatTimestampDate";
+import { CreateTask } from "./CreateTask";
+import { OutKanban } from "../../services/kanban/output/OutKanban.types";
 
 export default function KanbanBoard() {
   const styles = useStyles();
-  const [completed, setCompleted] = useState<Task[]>([]);
-  const [incomplete, setIncomplete] = useState<Task[]>([]);
-  const [backlog, setBacklog] = useState<Task[]>([]);
-  const [inReview, setInReview] = useState<Task[]>([]);
-  const [inProgress, setInProgress] = useState<Task[]>([]);
   const { getKanbanByDate, updateTaskStatusKanban } = useKanban();
-  const [kanban, setKanban] = useState<TKanban | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [kanban, setKanban] = useState<OutKanban | null>(null);
+  const [columnsTasks, setColumnsTasks] = useState<Record<string, Task[]>>({});
   const { intl } = useStore(useTranslationStore);
 
   async function getKanban() {
     const data = await getKanbanByDate();
     setKanban(data);
-    data.tasks.forEach((task) => {
-      switch (task.status) {
-        case "todo":
-          setIncomplete((prev) => [...prev, task]);
-          break;
-        case "inProgress":
-          setInProgress((prev) => [...prev, task]);
-          break;
-        case "done":
-          setCompleted((prev) => [...prev, task]);
-          break;
-        case "inReview":
-          setInReview((prev) => [...prev, task]);
-          break;
-        default:
-          setBacklog((prev) => [...prev, task]);
-      }
-    });
+
+    const initialColumnsStatus = data?.status.reduce(
+      (acc, status) => {
+        acc[status.name] = [];
+        return acc;
+      },
+      {} as Record<string, Task[]>
+    );
+
+    const tasksByStatus = data?.tasks.reduce(
+      (acc, task) => {
+        acc[task.status].push(task);
+        return acc;
+      },
+      initialColumnsStatus as Record<string, Task[]>
+    );
+
+    setColumnsTasks(tasksByStatus);
+    setIsLoading(false);
   }
 
   async function updateTask(taskId: string, status: string) {
     if (kanban === null) return;
     const updateTaskPromise = () =>
-      updateTaskStatusKanban(kanban.id, taskId, status);
+      updateTaskStatusKanban({ kanbanId: kanban.id, taskId, status });
     toast.promise(updateTaskPromise, {
       error: intl("errorEditStatusKanbanTask"),
     });
@@ -64,13 +65,7 @@ export default function KanbanBoard() {
 
     if (kanban === null) return;
 
-    const task = findItemById(draggableId, [
-      ...incomplete,
-      ...inProgress,
-      ...completed,
-      ...inReview,
-      ...backlog,
-    ]);
+    const task = findItemById(draggableId, columnsTasks[source.droppableId]);
 
     if (!task) return;
     setNewState(destination.droppableId, task);
@@ -78,54 +73,17 @@ export default function KanbanBoard() {
   };
 
   function deletePreviousState(sourceDroppableId: string, taskId: string) {
-    switch (sourceDroppableId) {
-      case "1":
-        setIncomplete(removeItemById(taskId, incomplete));
-        break;
-      case "2":
-        setInProgress(removeItemById(taskId, inProgress));
-        break;
-      case "3":
-        setInReview(removeItemById(taskId, inReview));
-        break;
-      case "4":
-        setBacklog(removeItemById(taskId, backlog));
-        break;
-      case "5":
-        setCompleted(removeItemById(taskId, completed));
-        break;
-    }
+    columnsTasks[sourceDroppableId] = removeItemById(
+      taskId,
+      columnsTasks[sourceDroppableId]
+    );
+    setColumnsTasks({ ...columnsTasks });
   }
 
   function setNewState(destinationDroppableId: string, task: Task) {
-    let updatedTask;
-    switch (destinationDroppableId) {
-      case "1":
-        updatedTask = { ...task, status: "todo" };
-        setIncomplete([updatedTask, ...incomplete]);
-        updateTask(task.id, "todo");
-        break;
-      case "2":
-        updatedTask = { ...task, status: "inProgress" };
-        setInProgress([updatedTask, ...inProgress]);
-        updateTask(task.id, "inProgress");
-        break;
-      case "3":
-        updatedTask = { ...task, status: "inReview" };
-        setInReview([updatedTask, ...inReview]);
-        updateTask(task.id, "inReview");
-        break;
-      case "4":
-        updatedTask = { ...task, status: "backlog" };
-        setBacklog([updatedTask, ...backlog]);
-        updateTask(task.id, "backlog");
-        break;
-      case "5":
-        updatedTask = { ...task, status: "done" };
-        setCompleted([updatedTask, ...completed]);
-        updateTask(task.id, "done");
-        break;
-    }
+    updateTask(task.id, destinationDroppableId);
+    columnsTasks[destinationDroppableId].push(task);
+    setColumnsTasks({ ...columnsTasks });
   }
 
   function findItemById(id: string, array: Task[]) {
@@ -136,22 +94,42 @@ export default function KanbanBoard() {
     return array.filter((item) => item.id !== id);
   }
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Card sx={styles.container}>
       <Grid container columnSpacing={2} rowSpacing={4}>
-        <Grid item xs={12} md={9.5}>
+        <Grid item xs={12} md={8}>
           <Typography variant="h6">Quadro Kanban</Typography>
+        </Grid>
+        <Grid item xs={12} md={2.5}>
+          <Select fullWidth size="small">
+            <MenuItem value="actualSprint">
+              Sprint Atual -{" "}
+              {kanban?.startDate && formatTimestampDate(kanban?.startDate)} até{" "}
+              {kanban?.finalDate && formatTimestampDate(kanban?.finalDate)}
+            </MenuItem>
+          </Select>
+        </Grid>
+        <Grid item xs={12} md={1.5}>
+          <CreateTask idKanban={kanban?.id} getKanban={getKanban} />
         </Grid>
         <Grid item xs={12} sx={{ height: "100%" }}>
           <DragDropContext
             onDragEnd={(result: DropResult) => handleDragEnd(result)}
           >
             <Box sx={styles.columnsContainer}>
-              <Column title={"A Fazer"} tasks={incomplete} id={"1"} />
-              <Column title={"Em Andamento"} tasks={inProgress} id={"2"} />
-              <Column title={"Em Review"} tasks={inReview} id={"3"} />
-              <Column title={"Em Teste"} tasks={backlog} id={"4"} />
-              <Column title={"Concluído"} tasks={completed} id={"5"} />
+              {columnsTasks &&
+                Object.keys(columnsTasks).map((key) => (
+                  <Column
+                    title={key}
+                    tasks={columnsTasks[key]}
+                    id={key}
+                    key={key}
+                  />
+                ))}
             </Box>
           </DragDropContext>
         </Grid>
