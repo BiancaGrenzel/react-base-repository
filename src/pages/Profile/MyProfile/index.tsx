@@ -4,22 +4,29 @@ import { useStore } from "zustand";
 import { useTranslationStore } from "../../../store/translationStore";
 import { useUserStore } from "../../../store/userStore";
 import validateEditUser from "./validate";
-import { EditUserFormValues } from "./types";
 import { toast } from "react-toastify";
 import { useUser } from "../../../hooks/useUser";
+import { InUpdateUser } from "../../../services/users/input/InUpdateUser.types";
 
 const MyProfile = () => {
-  const { name, birthDate, email, phone } = useUserStore();
+  const { name, birthDate, email, phone, uid } = useUserStore();
   const { intl } = useStore(useTranslationStore);
   const { updateUser } = useUser();
 
+  const initialValues: InUpdateUser = {
+    name: name || "",
+    birthDate: birthDate || "",
+    email: email || "",
+    phone: phone || "",
+    uid: uid,
+  };
+
   const handleSubmitForm = async (
-    values: EditUserFormValues,
-    { setSubmitting, setErrors }: FormikHelpers<EditUserFormValues>
+    values: typeof initialValues,
+    { setSubmitting, setErrors }: FormikHelpers<InUpdateUser>
   ) => {
     try {
-      const updatePromise = () =>
-        updateUser(values.email, values.birthDate, values.phone, values.name);
+      const updatePromise = () => updateUser(values);
 
       toast.promise(updatePromise, {
         pending: intl("loading"),
@@ -41,12 +48,7 @@ const MyProfile = () => {
       </Typography>
       <Divider sx={{ marginBottom: 2 }} />
       <Formik
-        initialValues={{
-          email: email || "",
-          birthDate: birthDate || "",
-          phone: phone || "",
-          name: name || "",
-        }}
+        initialValues={initialValues}
         validationSchema={validateEditUser}
         onSubmit={handleSubmitForm}
       >

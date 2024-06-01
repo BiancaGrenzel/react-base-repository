@@ -4,22 +4,22 @@ import {
   get_task_by_creator_uid,
   update_task,
 } from "../services/tasks";
-import { Task } from "../types/task.types";
+import { InCreateTask } from "../services/tasks/input/InCreateTask";
+import { InDeleteTask } from "../services/tasks/input/InDeleteTask";
+import { InGetTaskByCreatorUid } from "../services/tasks/input/InGetTaskByCreatorUid";
+import { InUpdateTask } from "../services/tasks/input/InUpdateTask";
+import { OutTask } from "../services/tasks/output/OutTask.types";
 
 export const useTasks = () => {
-  const createTask = async (
-    title: string,
-    description: string,
-    isFinished: boolean
-  ) => {
+  const createTask = async (task: InCreateTask) => {
     try {
-      await create_task(title, description, isFinished);
+      await create_task(task);
     } catch (error) {
       return error;
     }
   };
 
-  const updateTask = async (task: Task) => {
+  const updateTask = async (task: InUpdateTask) => {
     try {
       await update_task(task);
     } catch (error) {
@@ -27,9 +27,11 @@ export const useTasks = () => {
     }
   };
 
-  const getTasksByCreatorUid = async (uid: string): Promise<Task[]> => {
+  const getTasksByCreatorUid = async ({
+    uid,
+  }: InGetTaskByCreatorUid): Promise<OutTask[]> => {
     try {
-      const tasks = await get_task_by_creator_uid(uid);
+      const tasks = await get_task_by_creator_uid({ uid });
       return tasks;
     } catch (error) {
       console.log(error);
@@ -37,9 +39,9 @@ export const useTasks = () => {
     }
   };
 
-  const deleteTask = async (id: string) => {
+  const deleteTask = async ({ id }: InDeleteTask) => {
     try {
-      await delete_task(id);
+      await delete_task({ id });
     } catch (error) {
       return error;
     }

@@ -2,10 +2,10 @@ import { Box, Button, Card, Checkbox, Typography } from "@mui/material";
 import useStyles from "./styles";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useCallback, useEffect, useState } from "react";
-import { Task } from "../../../types/task.types";
 import { useTasks } from "../../../hooks/useTasks";
+import { OutTask } from "../../../services/tasks/output/OutTask.types";
 
-interface CheckboxLisItemProps extends Task {
+interface CheckboxLisItemProps extends OutTask {
   refetchTasks: () => void;
 }
 
@@ -30,7 +30,7 @@ const CheckboxLisItem = ({
   }, [id, checked, creator_uid, description, title, updateTask]);
 
   const handleDelete = () => {
-    deleteTask(id);
+    deleteTask({ id });
     refetchTasks();
   };
 

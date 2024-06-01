@@ -149,5 +149,13 @@ export const darkTheme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        multiline: {
+          minHeight: "100px",
+          alignItems: "flex-start",
+        },
+      },
+    },
   },
 } as ThemeOptions);

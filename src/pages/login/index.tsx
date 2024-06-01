@@ -29,7 +29,7 @@ const Login = () => {
     { setSubmitting, setErrors }: FormikHelpers<LoginFormValues>
   ) => {
     try {
-      const signInPromise = () => signIn(values.email, values.password);
+      const signInPromise = () => signIn(values);
       toast.promise(signInPromise, {
         pending: intl("loading"),
         success: intl("loginSuccess"),

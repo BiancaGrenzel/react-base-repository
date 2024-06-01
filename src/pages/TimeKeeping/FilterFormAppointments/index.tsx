@@ -1,17 +1,21 @@
+import SearchIcon from "@mui/icons-material/Search";
 import { Button, Grid, MenuItem, Select, TextField } from "@mui/material";
 import { GridCloseIcon } from "@mui/x-data-grid";
+import {
+  differenceInDays,
+  differenceInMonths,
+  differenceInWeeks,
+} from "date-fns";
 import { Field, Form, Formik } from "formik";
-import SearchIcon from "@mui/icons-material/Search";
 import { useStore } from "zustand";
+import { OutAppointment } from "../../../services/appointments/output/OutAppointment.types";
 import { useTranslationStore } from "../../../store/translationStore";
 import { useOptionsPeriodSelect } from "./hooks/useOptionsPeriodSelect";
 import { FilterAppointmentsFormValues } from "./types";
-import { TAppointment } from "../../../types/appointment.types";
-import { differenceInDays, differenceInMonths } from "date-fns";
 
 interface FilterFormAppointmentsProps {
-  appointments: TAppointment[];
-  setFilteredAppointments: (appointments: TAppointment[]) => void;
+  appointments: OutAppointment[];
+  setFilteredAppointments: (appointments: OutAppointment[]) => void;
 }
 
 export const FilterFormAppointments = ({
@@ -23,8 +27,8 @@ export const FilterFormAppointments = ({
 
   const filterAppointments = (
     formValues: FilterAppointmentsFormValues,
-    appointments: TAppointment[]
-  ): TAppointment[] => {
+    appointments: OutAppointment[]
+  ): OutAppointment[] => {
     if (!formValues.description && !formValues.nmTask && !formValues.period)
       return appointments;
 
@@ -51,7 +55,7 @@ export const FilterFormAppointments = ({
           isPeriodMatch = differenceInDays(today, createdDate) === 0;
           break;
         case "lastWeek":
-          isPeriodMatch = differenceInDays(today, createdDate) <= 7;
+          isPeriodMatch = differenceInWeeks(today, createdDate) === 0;
           break;
         case "lastMonth":
           isPeriodMatch = differenceInMonths(today, createdDate) <= 1;

@@ -2,13 +2,14 @@ import {
   create_current_user_appointment,
   get_current_user_appointments,
 } from "../services/appointments";
-import { TAppoinmentCreate, TAppointment } from "../types/appointment.types";
+import { InCreateAppointment } from "../services/appointments/input/InCreateAppointment.types";
+import { OutAppointment } from "../services/appointments/output/OutAppointment.types";
 
 export const useAppointments = () => {
-  const getCurrentUserAppointments = async (): Promise<TAppointment[]> => {
+  const getCurrentUserAppointments = async (): Promise<OutAppointment[]> => {
     try {
       const appointments = await get_current_user_appointments();
-      return appointments as TAppointment[];
+      return appointments as OutAppointment[];
     } catch (error) {
       console.error(error);
       throw new Error("Erro ao buscar consultas de apontamentos do usuário");
@@ -16,7 +17,7 @@ export const useAppointments = () => {
   };
 
   const createCurrentUserAppointment = async (
-    values: TAppoinmentCreate
+    values: InCreateAppointment
   ): Promise<void> => {
     try {
       await create_current_user_appointment(values);

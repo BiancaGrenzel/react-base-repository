@@ -8,17 +8,17 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { db } from "./firebase";
-import {
-  TKanban,
-  TKanbanColumn,
-  TKanbanStatus,
-  TKanbanTask,
-} from "../types/kanban.types";
+import { db } from "../firebase";
+import { InUpdateTaskStatus } from "./input/InUpdateTaskStatus.types";
+import { InGetKanbanByDate } from "./input/InGetKanbanByDate.types";
+import { OutKanban } from "./output/OutKanban.types";
+import { OutKanbanColumn } from "./output/OutKanbanColumn.types";
+import { OutKanbanStatus } from "./output/OutKanbanStatus.types";
+import { OutKanbanTask } from "./output/OutKanbanTask.types";
 
 const refKanbanCollection = collection(db, "kanban");
 
-export const get_kanban_by_date = async (date?: Timestamp) => {
+export const get_kanban_by_date = async ({ date }: InGetKanbanByDate) => {
   const currentTimestamp = date || Timestamp.now();
 
   const kanbanQuery = query(
@@ -32,7 +32,7 @@ export const get_kanban_by_date = async (date?: Timestamp) => {
 
   if (!querySnapshot.empty) {
     const doc = querySnapshot.docs[0];
-    const kanban = doc.data() as TKanban;
+    const kanban = doc.data() as OutKanban;
     kanban.id = doc.id;
 
     const columnsSnapshot = await getDocs(collection(doc.ref, "columns"));
@@ -40,13 +40,13 @@ export const get_kanban_by_date = async (date?: Timestamp) => {
     const tasksSnapshot = await getDocs(collection(doc.ref, "tasks"));
 
     kanban.columns = columnsSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as TKanbanColumn
+      (doc) => ({ id: doc.id, ...doc.data() }) as OutKanbanColumn
     );
     kanban.status = statusSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as TKanbanStatus
+      (doc) => ({ id: doc.id, ...doc.data() }) as OutKanbanStatus
     );
     kanban.tasks = tasksSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as TKanbanTask
+      (doc) => ({ id: doc.id, ...doc.data() }) as OutKanbanTask
     );
 
     return kanban;
@@ -55,11 +55,11 @@ export const get_kanban_by_date = async (date?: Timestamp) => {
   }
 };
 
-export const update_task_status = async (
-  kanbanId: string,
-  taskId: string,
-  status: string
-) => {
+export const update_task_status = async ({
+  kanbanId,
+  taskId,
+  status,
+}: InUpdateTaskStatus): Promise<void> => {
   const kanbanRef = doc(refKanbanCollection, kanbanId);
   const taskRef = doc(collection(kanbanRef, "tasks"), taskId);
 

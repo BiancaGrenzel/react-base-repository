@@ -1,16 +1,18 @@
 import { useUserStore } from "../store";
 import { update_user } from "../services/users";
+import { InUpdateUser } from "../services/users/input/InUpdateUser.types";
 
 export const useUser = () => {
-  const { uid, setUser } = useUserStore();
+  const { setUser } = useUserStore();
 
-  const updateUser = async (
-    email?: string,
-    birthDate?: string,
-    phone?: string,
-    name?: string
-  ) => {
-    await update_user(uid, email, birthDate, phone, name);
+  const updateUser = async ({
+    uid,
+    email,
+    birthDate,
+    phone,
+    name,
+  }: InUpdateUser) => {
+    await update_user({ uid, email, birthDate, phone, name });
     setUser({ email, birthDate, phone, name });
   };
 

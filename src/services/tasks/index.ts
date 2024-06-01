@@ -1,25 +1,28 @@
 import {
   addDoc,
   collection,
-  doc,
-  updateDoc,
   deleteDoc,
+  doc,
   getDocs,
   query,
-  where,
   serverTimestamp,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { db } from "./firebase";
-import { Task } from "../types/task.types";
-import { auth } from "./firebase";
+import { auth, db } from "../firebase";
+import { InCreateTask } from "./input/InCreateTask";
+import { InDeleteTask } from "./input/InDeleteTask";
+import { InGetTaskByCreatorUid } from "./input/InGetTaskByCreatorUid";
+import { InUpdateTask } from "./input/InUpdateTask";
+import { OutTask } from "./output/OutTask.types";
 
 const refUsersCollection = collection(db, "tasks");
 
-export const create_task = async (
-  title: string,
-  description: string,
-  isFinished: boolean
-) => {
+export const create_task = async ({
+  title,
+  description,
+  isFinished,
+}: InCreateTask): Promise<void> => {
   const user = auth.currentUser;
   const date = serverTimestamp();
   await addDoc(refUsersCollection, {
@@ -32,7 +35,7 @@ export const create_task = async (
   });
 };
 
-export const update_task = async (task: Task) => {
+export const update_task = async (task: InUpdateTask): Promise<void> => {
   const { id, title, description, isFinished } = task;
   const taskDoc = doc(db, "tasks", id);
 
@@ -48,13 +51,15 @@ export const update_task = async (task: Task) => {
   await updateDoc(taskDoc, updatedFields);
 };
 
-export const get_task_by_creator_uid = async (uid: string) => {
+export const get_task_by_creator_uid = async ({
+  uid,
+}: InGetTaskByCreatorUid): Promise<OutTask[]> => {
   const q = query(refUsersCollection, where("creator_uid", "==", uid));
 
   const querySnapshot = await getDocs(q);
-  const tasks: Task[] = [];
+  const tasks: OutTask[] = [];
   querySnapshot.forEach((doc) => {
-    const task = doc.data() as Task;
+    const task = doc.data() as OutTask;
     task.id = doc.id;
     tasks.push(task);
   });
@@ -62,7 +67,7 @@ export const get_task_by_creator_uid = async (uid: string) => {
   return tasks;
 };
 
-export const delete_task = async (id: string) => {
+export const delete_task = async ({ id }: InDeleteTask): Promise<void> => {
   const taskDoc = doc(db, "tasks", id);
   await deleteDoc(taskDoc);
 };

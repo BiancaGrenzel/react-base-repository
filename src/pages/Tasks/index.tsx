@@ -6,15 +6,15 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckboxLisItem from "./CheckboxListItem";
 import { useTasks } from "../../hooks/useTasks";
 import { useEffect, useState } from "react";
-import { Task } from "../../types/task.types";
 import ModalCreateTask from "./ModalCreateTask";
 import { useUserStore } from "../../store/userStore";
+import { OutTask } from "../../services/tasks/output/OutTask.types";
 
 const Tasks = () => {
   const styles = useStyles();
   const { intl } = useStore(useTranslationStore);
   const { getTasksByCreatorUid } = useTasks();
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<OutTask[]>([]);
   const [createTaskModalOpen, setCreateTaskModalOpen] = useState(false);
   const { uid } = useUserStore();
 
@@ -27,7 +27,7 @@ const Tasks = () => {
   };
 
   const fetchTasks = async () => {
-    const result = await getTasksByCreatorUid(uid);
+    const result = await getTasksByCreatorUid({ uid });
     setTasks(result);
   };
 
