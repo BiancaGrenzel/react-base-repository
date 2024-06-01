@@ -1,4 +1,4 @@
-import { useThemeStore } from "../store/themeStore";
+import { useThemeStore } from "../store";
 import { darkTheme } from "../theme/darkTheme";
 import { lightTheme } from "../theme/lightTheme";
 

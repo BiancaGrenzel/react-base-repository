@@ -10,7 +10,7 @@ import ModalCreateTask from "./ModalCreateTask";
 import { useUserStore } from "../../store/userStore";
 import { OutTask } from "../../services/tasks/output/OutTask.types";
 
-const Tasks = () => {
+const TodoList = () => {
   const styles = useStyles();
   const { intl } = useStore(useTranslationStore);
   const { getTasksByCreatorUid } = useTasks();
@@ -62,4 +62,4 @@ const Tasks = () => {
   );
 };
 
-export default Tasks;
+export default TodoList;

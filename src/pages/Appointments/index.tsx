@@ -9,7 +9,7 @@ import { CreateAppointment } from "./CreateAppointment";
 import { FilterFormAppointments } from "./FilterFormAppointments";
 import { useAppointmentColumns } from "./hooks/useAppointmentColumns";
 
-export const TimeKeeping = () => {
+const Appointments = () => {
   const [appointments, setAppointments] = useState<OutAppointment[]>([]);
   const [filteredAppointments, setFilteredAppointments] = useState<
     OutAppointment[]
@@ -78,3 +78,5 @@ export const TimeKeeping = () => {
     </Card>
   );
 };
+
+export default Appointments;

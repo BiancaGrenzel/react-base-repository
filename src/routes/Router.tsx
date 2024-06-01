@@ -9,8 +9,8 @@ import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
 import Profile from "../pages/Profile";
 import RecoverPassword from "../pages/RecoverPassword";
-import Tasks from "../pages/Tasks";
-import { TimeKeeping } from "../pages/TimeKeeping";
+import TodoList from "../pages/TodoList";
+import Appointments from "../pages/Appointments";
 import KanbanBoard from "../pages/KanbanBoard";
 
 const router = createBrowserRouter([
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
         children: [
           { path: "/", element: <Home /> },
           { path: "/profile", element: <Profile /> },
-          { path: "/tasks", element: <Tasks /> },
-          { path: "/time-keeping", element: <TimeKeeping /> },
+          { path: "/tasks", element: <TodoList /> },
+          { path: "/time-keeping", element: <Appointments /> },
           { path: "/kanban-board", element: <KanbanBoard /> },
         ],
       },
