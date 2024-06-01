@@ -10,18 +10,20 @@ import {
 } from "../services/auth";
 import { create_user, get_user_by_id } from "../services/users";
 import { auth } from "../services/firebase";
+import { InSignIn } from "../services/auth/input/InSignIn.types";
+import { InRecoverPassword } from "../services/auth/input/InRecoverPassword.types";
 
 export const useAuth = () => {
   const { uid, setUser, resetUser } = useUserStore();
   const { setRefreshToken } = useAuthStore();
 
-  const signIn = async (email: string, password: string) => {
-    const userCredential = await signin(email, password);
+  const signIn = async ({ email, password }: InSignIn) => {
+    const userCredential = await signin({ email, password });
 
     let user;
 
     try {
-      user = await get_user_by_id(userCredential.user.uid);
+      user = await get_user_by_id({ uid: userCredential.user.uid });
     } catch (error) {
       throw new Error("Erro ao buscar informações do usuário");
     }
@@ -43,7 +45,7 @@ export const useAuth = () => {
   const isAuthenticated = () => {
     const hasCurrentUser = auth.currentUser;
     const uuidLocalStorage = localStorage.getItem("uid");
-    return !!uid && !!uuidLocalStorage && hasCurrentUser;
+    return !!uid && !!uuidLocalStorage && !!hasCurrentUser;
   };
 
   const signUp = async (
@@ -53,12 +55,13 @@ export const useAuth = () => {
     phone: string,
     name: string
   ) => {
-    const userCredential = await signup(email, password);
+    const userCredential = await signup({ email, password });
 
     const user = userCredential.user;
+    const uid = user.uid;
 
     try {
-      await create_user(email, birthDate, phone, name, user.uid);
+      await create_user({ email, birthDate, phone, name, uid });
     } catch (error) {
       await deleteCurrentUser();
       throw error;
@@ -77,8 +80,8 @@ export const useAuth = () => {
     setRefreshToken(null);
   };
 
-  const recoverPassword = async (email: string) => {
-    await recoverpassword(email);
+  const recoverPassword = async ({ email }: InRecoverPassword) => {
+    await recoverpassword({ email });
   };
 
   const changePassword = async (
@@ -87,12 +90,12 @@ export const useAuth = () => {
     newPassword: string
   ) => {
     try {
-      await reauthenticate(email, password);
+      await reauthenticate({ email, password });
     } catch {
       throw new Error("Erro ao reautenticar usuário");
     }
 
-    await changepassword(newPassword);
+    await changepassword({ newPassword });
   };
 
   return {

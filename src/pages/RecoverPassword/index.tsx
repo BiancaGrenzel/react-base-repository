@@ -21,7 +21,7 @@ const RecoverPassword = () => {
     { setSubmitting, setErrors }: FormikHelpers<RecoverPasswordFormValues>
   ) => {
     try {
-      const recoverPasswordPromise = () => recoverPassword(values.email);
+      const recoverPasswordPromise = () => recoverPassword(values);
       toast.promise(recoverPasswordPromise, {
         pending: intl("loading"),
         success: intl("recoverPasswordEmailSentSuccess"),

@@ -314,4 +314,60 @@ export const messages: Messages = {
     en: "Organize your tasks in a kanban board",
     pt: "Organize suas tarefas em um quadro kanban",
   },
+  errorEditStatusKanbanTask: {
+    en: "Error editing status of kanban task",
+    pt: "Erro ao editar status da tarefa do kanban",
+  },
+  done: {
+    en: "Done",
+    pt: "Feito",
+  },
+  inReview: {
+    en: "In Review",
+    pt: "Em Revisão",
+  },
+  inProgress: {
+    en: "In Progress",
+    pt: "Em Progresso",
+  },
+  todo: {
+    en: "Todo",
+    pt: "A Fazer",
+  },
+  qa: {
+    en: "QA",
+    pt: "QA",
+  },
+  storyPoints: {
+    en: "Story Points",
+    pt: "Story Points",
+  },
+  status: {
+    en: "Status",
+    pt: "Status",
+  },
+  createdBy: {
+    en: "Created By",
+    pt: "Criado Por",
+  },
+  fieldAutomaticallyFilledWithYourUsername: {
+    en: "Field automatically filled with your username.",
+    pt: "Campo preenchido automaticamente com o seu usuário.",
+  },
+  aCreatedTaskAlwaysStartsWithTheStatus: {
+    en: `A task created always starts with the status`,
+    pt: `Uma tarefa criada sempre começa com o status`,
+  },
+  toCreateATaskFirstSelectOrCreateASprintInKanbanBoard: {
+    en: `To create a task, first select or create a Sprint in the Kanban Board`,
+    pt: `Para criar uma tarefa, primeiro selecione ou crie uma Sprint no Quadro Kanban`,
+  },
+  fieldAutomaticallyFilledWithTheCurrentDate: {
+    en: `Field automatically filled with the current date.`,
+    pt: `Campo preenchido automaticamente com a data atual.`,
+  },
+  close: {
+    en: "Close",
+    pt: "Fechar",
+  },
 };

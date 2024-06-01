@@ -3,17 +3,21 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useStore } from "zustand";
 import { useAppointments } from "../../hooks/useAppointments";
+import { OutAppointment } from "../../services/appointments/output/OutAppointment.types";
 import { useTranslationStore } from "../../store";
-import { TAppointment } from "../../types/appointment.types";
 import { CreateAppointment } from "./CreateAppointment";
 import { FilterFormAppointments } from "./FilterFormAppointments";
 import { useAppointmentColumns } from "./hooks/useAppointmentColumns";
 
 export const TimeKeeping = () => {
-  const [appointments, setAppointments] = useState<TAppointment[]>([]);
+  const [appointments, setAppointments] = useState<OutAppointment[]>([]);
   const [filteredAppointments, setFilteredAppointments] = useState<
-    TAppointment[]
+    OutAppointment[]
   >([]);
+  const totalHours = filteredAppointments.reduce(
+    (total, appointment) => total + appointment.qtHours,
+    0
+  );
   const [isLoading, setIsLoading] = useState(false);
   const { getCurrentUserAppointments } = useAppointments();
   const columns = useAppointmentColumns();
@@ -62,7 +66,13 @@ export const TimeKeeping = () => {
                 sort: "desc",
               },
             ]}
+            localeText={{
+              noRowsLabel: "Nenhum apontamento de horas encontrado.",
+            }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          Quantidade Total de Horas: {totalHours}
         </Grid>
       </Grid>
     </Card>

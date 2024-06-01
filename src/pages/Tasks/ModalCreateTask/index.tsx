@@ -25,7 +25,11 @@ const ModalCreateTask = ({
     { setSubmitting, setErrors }: FormikHelpers<TaskFormValues>
   ) => {
     try {
-      await createTask(values.title, values.description, false);
+      await createTask({
+        title: values.title,
+        description: values.description,
+        isFinished: false,
+      });
       handleClose();
       refetchTasks();
     } catch (error) {

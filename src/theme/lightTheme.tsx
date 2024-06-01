@@ -50,6 +50,17 @@ export const lightTheme = createTheme({
         },
       },
     },
+
+    MuiButton: {
+      styleOverrides: {
+        containedPrimary: {
+          boxShadow: "none",
+        },
+        sizeMedium: () => ({
+          height: "40px",
+        }),
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -58,7 +69,6 @@ export const lightTheme = createTheme({
         },
       },
     },
-
     MuiDataGrid: {
       styleOverrides: {
         columnHeaderRow: {
@@ -66,6 +76,14 @@ export const lightTheme = createTheme({
         },
         footerContainer: {
           backgroundColor: "#f9fafb",
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        multiline: {
+          minHeight: "100px",
+          alignItems: "flex-start",
         },
       },
     },
